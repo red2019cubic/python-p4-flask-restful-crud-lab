@@ -62,14 +62,18 @@ class PlantByID(Resource):
         return response
 
     def patch(self, id):
+
         plant = Plant.query.filter_by(id=id).first()
-        for attr in request.form:
-            setattr(plant, attr, request.form[attr])
+        plant_json = request.get_json()
+        for attr in plant_json:
+            setattr(plant, attr, plant_json[attr])
+
         db.session.add(plant)
         db.session.commit()
+
         res_dict = plant.to_dict()
         response = make_response(res_dict, 200)
-            
+
         return response
 
 
